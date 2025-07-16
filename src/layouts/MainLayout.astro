@@ -1,8 +1,15 @@
 ---
 interface Props {
   title?: string;
+  image?: string;
+  description?: string;
 }
-const { title = "Astro" } = Astro.props;
+const { 
+    title = siteInfo.title, 
+    description = siteInfo.description, 
+    image 
+} = Astro.props;
+import { siteInfo } from '@/consts/site-info';
 import ClientRouter from 'astro/components/ClientRouter.astro';
 ---
 
@@ -12,8 +19,18 @@ import ClientRouter from 'astro/components/ClientRouter.astro';
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+    <!----SEO -->
+    <meta name="description" content={description} />
+    <meta name="author" content="Angel Lopez" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+
+    <meta name="author" content="Astro Team" />
     <title>{title}</title>
-    <ClientRouter />
+    <!-- <ClientRouter /> -->
   </head>
   <body class="bg-slate-800 text-slate-100 m-auto max-w-3xl">
     <slot />

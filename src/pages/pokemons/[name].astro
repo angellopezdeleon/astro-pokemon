@@ -1,9 +1,9 @@
 ---
-import MainLayout from "../../layouts/MainLayout.astro";
-import PokemonCard from "../../components/pokemons/PokemonCard.astro";
-import type { PokemonListResponse } from "../../interfaces/pokemon-list.response";
+import MainLayout from "@layouts/MainLayout.astro";
+import PokemonCard from "@components/pokemons/PokemonCard.astro";
+import type { PokemonListResponse } from "@interfaces/pokemon-list.response";
 import type { GetStaticPaths } from "astro";
-import "../../styles/global.css";
+import "@styles/global.css";
 export const getStaticPaths = (async () => {
   const resp = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
   const { results } = await resp.json() as PokemonListResponse;
@@ -16,13 +16,21 @@ export const getStaticPaths = (async () => {
 
 const { name, url } = Astro.props;
 const id = url.split("/").slice(-2)[0]; // Extracting the ID from the URL
-const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/${id}.ogg`;
+// Obtener detalles del Pokémon
+const resp = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+const pokemonDetail = await resp.json();
+const audioSrc = pokemonDetail.cries?.latest || pokemonDetail.cries?.legacy || '';
+const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
 ---
 
-<MainLayout title="Algún Pokémon">
+<MainLayout 
+  title={`Pokemon - #${id} ${name}`}
+  description={`Detalles del Pokémon ${name} con ID ${id}. Escucha su sonido característico.`}
+  image={imageSrc}
+>
   <section class="mt-10 mx-10 flex flex-col justify-center items-center">
     <div>
-      <a href="/" class="hover:underline text-blue-500">Regresar</a>
+      <a href="#" onclick="window.history.back(); return false;" class="hover:underline text-blue-500 mb-2.5">Regresar</a>
       <h1 class="text-3xl font-bold capitalize">{name}</h1>
     </div>
     <PokemonCard name={name} url={url} isBig={true} />

@@ -1,0 +1,59 @@
+---
+import "@styles/global.css";
+import MainLayout from "@layouts/MainLayout.astro";
+import type { PokemonListResponse } from "@interfaces/pokemon-list.response";
+import PokemonCard from "@components/pokemons/PokemonCard.astro";
+import type { GetStaticPaths } from "astro";
+
+export const getStaticPaths = (async ({ paginate }) => {
+  
+    const resp = await fetch("https://pokeapi.co/api/v2/pokemon/?limit=151");
+    const { results } = (await resp.json()) as PokemonListResponse;
+
+    return paginate(results, { pageSize: 12 });
+}) satisfies GetStaticPaths;
+
+const title: string = "Pokemon Static | Home";
+const { page } = Astro.props;
+---
+
+<MainLayout title={title}>
+  <h1 class="text-3xl font-bold mb-2.5 mt-2.5">Listado de Pokémons</h1>
+  <hr class="mb-4" />
+
+  <section
+    aria-label="Listado de Pokémons"
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+  >
+    {
+      page.data.map(({name, url}) => (
+        <li class="list-none">
+          <PokemonCard name={name} url={url} />
+        </li>
+      ))
+    }
+  </section>
+
+  <section class="flex px-2 mt-10 gap-4 justify-around">
+
+    <a class:list={["btn", { disabled: !page.url.prev }]}
+       href={page.url.prev}>Anteriores</a>
+    <a class:list={["btn", { disabled: !page.url.next }]}
+       href={page.url.next}>Siguientes</a>
+
+    <div class="flex flex-1"></div>
+
+    <span class="text-2xl">Página</span>
+    <span class="text-3xl">{page.currentPage}</span>
+  </section>
+</MainLayout>
+
+<style>
+  @reference "@styles/global.css";
+  .btn {
+    @apply bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 transition-colors duration-300;
+  }
+  .disabled {
+    @apply bg-gray-400 text-gray-200 cursor-not-allowed;
+  }
+</style>
