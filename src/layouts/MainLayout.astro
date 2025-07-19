@@ -11,6 +11,8 @@ const {
 } = Astro.props;
 import { siteInfo } from '@/consts/site-info';
 import ClientRouter from 'astro/components/ClientRouter.astro';
+import NavBar from '@/components/shared/NavBar.astro';
+import "@styles/global.css";
 ---
 
 <html lang="en">
@@ -30,9 +32,12 @@ import ClientRouter from 'astro/components/ClientRouter.astro';
 
     <meta name="author" content="Astro Team" />
     <title>{title}</title>
-    <!-- <ClientRouter /> -->
+    <ClientRouter />
   </head>
   <body class="bg-slate-800 text-slate-100 m-auto max-w-3xl">
-    <slot />
+    <NavBar />
+    <main>
+      <slot />
+    </main>
   </body>
 </html>

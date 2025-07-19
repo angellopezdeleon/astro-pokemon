@@ -4,20 +4,19 @@ import tailwindcss from '@tailwindcss/vite';
 
 import relativeLinks from 'astro-relative-links';
 
+import icon from 'astro-icon';
+
 // https://astro.build/config
 export default defineConfig({
   vite: {
     plugins: [tailwindcss()]
   },
-
   devToolbar: { enabled: false },
-  // base: './',
-
-  // build: {
-  //   format: 'file',
-  // },
-
+  
   trailingSlash: 'never',
-
-  integrations: [relativeLinks()],
+  integrations: [relativeLinks(), icon(
+    {
+      iconDir: 'src/icons',
+    }
+  )],
 });

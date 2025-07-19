@@ -3,20 +3,17 @@ import "@styles/global.css";
 import MainLayout from "@layouts/MainLayout.astro";
 import type { PokemonListResponse } from "@interfaces/pokemon-list.response";
 import PokemonCard from "@components/pokemons/PokemonCard.astro";
+import Title from "@/components/shared/Title.astro";
+
 const title: string = "Pokemon Static | Home";
 
 const resp = await fetch("https://pokeapi.co/api/v2/pokemon");
 const data = (await resp.json()) as PokemonListResponse;
 console.log("BOOM - data:", data);
-
-if (Astro.url.pathname === '/') {
-  return Astro.redirect('/pokemons/1');
-}
 ---
 
 <MainLayout title={title}>
-  <h1 class="text-3xl font-bold mb-2.5 mt-2.5">Listado de Pokémons</h1>
-  <hr class="mb-4" />
+  <Title>Listado de Pokémons</Title>
 
   <section
     aria-label="Listado de Pokémons"
